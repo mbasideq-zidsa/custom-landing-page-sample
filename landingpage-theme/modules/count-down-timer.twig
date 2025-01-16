@@ -1,0 +1,173 @@
+<section section-id="{{ sectionId }}"
+         data-lg-scroll-offset="130"
+         data-md-scroll-offset="130"
+         data-sm-scroll-offset="94"
+         style="{% if settings.color %}color: {{ settings.color }}; {% endif %}{% if settings.background_color %}background-color: {{ settings.background_color }}; {% endif %}"
+         >
+  <div class="section-slider-padding-space section-count-down">
+
+      <div class="sale-container">
+            <h3>{{ settings.title }}</h3>
+            <p>{{ settings.description }}</p>
+            <div id="countdown">
+                <div><span id="days">00</span>{{ locals.days }}</div>
+                <div><span id="hours">00</span>{{ locals.hours }}</div>
+                <div><span id="minutes">00</span>{{ locals.minutes }}</div>
+                <div><span id="seconds">00</span>{{ locals.seconds }}</div>
+            </div>
+      </div>
+
+  </div>
+
+</section>
+
+<style>
+.sale-container {
+    text-align: center;
+    padding: 40px;
+    background-color: #3C0458;
+    color: #fff;
+}
+
+.sale-container h3{
+  margin-top: 10px;
+}
+
+#countdown {
+  direction: ltr;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+#countdown div {
+    background: #333;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    min-width: 70px;
+}
+
+#countdown span {
+    display: block;
+    font-size: 2em;
+}
+
+.shop-now {
+    background: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.shop-now:hover {
+    background: #218838;
+}
+</style>
+
+
+<script>
+
+  
+
+    document.addEventListener("DOMContentLoaded", () => {
+
+        // Create the future date by adding the milliseconds
+        const futureDate = new Date('{{ settings.date }}');      
+
+      // Create a new Date object representing the duration since the Unix epoch
+      const saleEndDate = futureDate.getTime();
+
+  
+
+        // Update the countdown every second
+        const countdownInterval = setInterval(() => {
+            const now = new Date().getTime();
+            const timeLeft = saleEndDate - now;
+
+            // Time calculations
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+            // Display the result
+            document.querySelector('[section-id={{ sectionId }}] #days').innerText = days.toString().padStart(2, '0');
+            document.querySelector('[section-id={{ sectionId }}] #hours').innerText = hours.toString().padStart(2, '0');
+            document.querySelector('[section-id={{ sectionId }}] #minutes').innerText = minutes.toString().padStart(2, '0');
+            document.querySelector('[section-id={{ sectionId }}] #seconds').innerText = seconds.toString().padStart(2, '0');
+
+            // If the countdown is over, display a message and stop the countdown
+            if (timeLeft < 0) {
+                clearInterval(countdownInterval);
+                document.querySelector('[section-id={{ sectionId }}] .sale-container').innerHTML = `<h3>{{ settings.sales_end_description }}</h3>`;
+            }
+        }, 1000);
+
+    });
+</script>
+
+
+{% schema %}
+{
+  "name": {
+    "ar": "العد التنازلي",
+    "en": "Countdown timer"
+  },
+  "icon": "fal fa-sparkles",
+  "display": true,
+  "settings": {
+    "title": {
+      "type": "text",
+      "label": {
+        "ar": "العنوان",
+        "en": "title"
+      }
+    },
+    "description": {
+      "type": "textarea",
+      "label": {
+        "ar": "العنوان",
+        "en": "description"
+      }
+    },
+    "date": {
+      "type": "text",
+      "label": {
+        "ar": "تاريخ الانتهاء",
+        "en": "Date"
+      },
+      "info": {
+        "ar": "مثال: 2024-12-25 16:10:05",
+        "en": "example: 2024-12-25 16:10:05"
+      }
+    },
+    "color": {
+      "type": "color",
+      "label": {
+        "ar": "لون النص",
+        "en": "Color"
+      }
+    },
+    "background_color": {
+      "type": "color",
+      "label": {
+        "ar": "لون الخلفية",
+        "en": "Background Color"
+      }
+    },
+    "sales_end_description": {
+      "type": "textarea",
+      "label": {
+        "ar": "نص انتهاء العرض",
+        "en": "Sales end text"
+      }
+    }
+  }
+}
+{% endschema %}

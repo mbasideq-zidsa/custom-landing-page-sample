@@ -1,0 +1,83 @@
+
+<section section-id="{{ sectionId }}" class="copyright"
+style="{% if settings.background_color %}background-color: {{ settings.background_color }}; {% endif %}"
+>
+		<div class="container padding copyright-texts d-flex justify-content-between flex-column flex-md-row">
+		<div class="privacy d-flex justify-content-between flex-column flex-md-row">
+			{% for key, link in settings.links %}
+				<a href="{{ link.url }}" target="_blank" style="text-decoration: none; color: #000; {% if settings.color %}color: {{ settings.color }}; {% endif %}">
+					<div class="px-3" style="text-align: center">{{ link.text }}</div>
+				</a>
+			{% endfor %}	
+		</div>
+		<div class="pt-2 d-flex justify-content-center justify-content-md-end pt-md-0"
+    style="{% if settings.color %}color: {{ settings.color }}; {% endif %}"
+    >
+			{{ settings.copyrights }}
+		</div>
+	</div>
+</section>
+
+
+{% schema %}
+{
+  "name": {
+    "ar": "حقوق الحفظ",
+    "en": "Copyrights"
+  },
+  "icon": "fal fa-sparkles",
+  "display": true,
+  "settings": {
+    "copyrights": {
+      "type": "text",
+      "label": {
+        "ar": "نص حقوق الحفظ",
+        "en": "copyrights text"
+      }
+    },
+    "links": {
+      "type": "list",
+      "noLabel": true,
+      "maxItems": 3,
+      "info": {
+        "ar": "",
+        "en": ""
+      },
+      "settings_label":{
+        "ar": "روابط مهمة",
+        "en": "Important links"
+      },
+      "settings": {
+        "text": {
+          "type": "text",
+          "label": {
+            "ar": "النص",
+            "en": "text"
+          }
+        },
+        "url": {
+          "type": "url",
+          "label": {
+            "ar": "الرابط",
+            "en": "Link"
+          }
+        }
+      }
+    },
+    "color": {
+      "type": "color",
+      "label": {
+        "ar": "لون النص",
+        "en": "Color"
+      }
+    },
+    "background_color": {
+      "type": "color",
+      "label": {
+        "ar": "لون الخلفية",
+        "en": "Background Color"
+      }
+    }
+  }
+}
+{% endschema %}

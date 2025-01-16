@@ -1,0 +1,19 @@
+### npm
+node_modules/
+npm-debug.log
+
+
+/.idea
+public/hot
+.env
+.map
+*.map
+.js.map
+*.js.map
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json

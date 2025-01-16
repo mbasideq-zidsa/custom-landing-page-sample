@@ -1,0 +1,84 @@
+<section section-id="{{ sectionId }}" class="features-section-2 py-2 more-specs d-flex flex-column justify-content-center align-items-center py-md-5"
+style="{% if settings.background_image %}background-image: url({{ settings.background_image }}); {% endif %}{% if settings.background_color %}background-color: {{ settings.background_color }}; box-shadow: inset 0 0 0 2000px {{ settings.background_color }}{% endif %}">
+   <div class="why">{{ settings.title }}</div>
+   <div class="container elemnts row row-cols-2 row-cols-md-3">
+   {% for key, feature in settings.features %}
+    <div class="py-5 div1 col-6 col-md-4">
+         <div class="icon">
+           <img loading="lazy" src="{{ imageUrl(feature.image) }}">
+         </div>
+         <div class="text-style max-w-8rem">
+            {{ feature.text }}
+         </div>
+      </div>
+    {% endfor %}
+   </div>
+</section>
+
+
+{% schema %}
+{
+  "name": {
+    "ar": "2 خصائص المنتج",
+    "en": "Features 2"
+  },
+  "icon": "fal fa-sparkles",
+  "display": true,
+  "settings": {
+    "title": {
+      "type": "text",
+      "label": {
+        "ar": "العنوان",
+        "en": "Title"
+      }
+    },
+    "features": {
+      "type": "list",
+      "noLabel": true,
+      "maxItems": 6,
+      "info": {
+        "ar": "",
+        "en": ""
+      },
+      "settings_label":{
+        "ar": "الصورة",
+        "en": "Picture"
+      },
+      "settings": {
+        "text": {
+          "type": "text",
+          "label": {
+            "ar": "النص",
+            "en": "text"
+          }
+        },
+        "image": {
+          "type": "image",
+          "label": {
+            "ar": "الصورة",
+            "en": "Image"
+          },
+          "info": {
+            "ar": "ارفع صورة بحجم ٢٠٠ *٢٠٠ ",
+            "en": "This is an info text sample here"
+          }
+        }
+      }
+    },
+    "background_color": {
+      "type": "color",
+      "label": {
+        "ar": "لون الخلفية",
+        "en": "Background Color"
+      }
+    },
+    "background_image": {
+      "type": "image",
+      "label": {
+        "ar": "صورة الخلفية",
+        "en": "Background Image"
+      }
+    }
+  }
+}
+{% endschema %}

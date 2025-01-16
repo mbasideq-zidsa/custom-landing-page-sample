@@ -1,0 +1,33 @@
+{% if not settings.hide %}
+<section class="container icons d-flex justify-content-center ">
+	<div class="py-3 icons">
+		<div class="flex-wrap logistics-pay-icons d-flex justify-content-center">
+			{% for payment_method in store.payment_methods %}
+				<a class="p-3" href="/shipping-and-payment">
+					<img src="{{ imageUrl(payment_method.icon,{ h: 80, q: 100 }) }}" loading="lazy" alt="" height="21">
+				</a>
+			{% endfor %}				
+		</div>
+	</div>
+</section>
+{% endif %}
+
+{% schema %}
+{
+  "name": {
+    "ar": "خيارات الدفع",
+    "en": "Payments options"
+  },
+  "icon": "fal fa-sparkles",
+  "display": true,
+  "settings": {
+    "hide": {
+      "type": "checkbox",
+      "label": {
+        "ar": "إخفاء",
+        "en": "Hide"
+      }
+    }
+  }
+}
+{% endschema %}

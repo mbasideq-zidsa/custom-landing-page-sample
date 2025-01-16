@@ -1,0 +1,49 @@
+<header class="hero">
+	<img src="{{ settings.image }}" alt="{{ settings.description }}" class="hero-image">
+    <h2 class="title">{{ settings.title }}</h2>
+</header>
+
+{% schema %}
+{
+    "name": {
+        "ar": "صورة كبيرة",
+        "en": "Banner"
+    },
+    "icon": "fal fa-rectangle-wide",
+    "display": true,
+    "settings": {
+        "image": {
+            "type": "image",
+            "label": {
+                "ar": "الصورة",
+                "en": "Image"
+            },
+            "info": {
+                "ar": "ارفع صورة بحجم 1400 * 600",
+                "en": "Upload image size 600 * 1400"
+            }
+        },
+        "title": {
+            "type": "text",
+            "label": {
+                "ar": "العنوان",
+                "en": "Title"
+            }
+        },
+        "description": {
+            "type": "text",
+            "label": {
+                "ar": "وصف الصورة",
+                "en": "Alt text"
+            }
+        },
+        "url": {
+            "type": "url",
+            "label": {
+                "ar": "الرابط",
+                "en": "Link"
+            }
+        }
+    }
+}
+{% endschema %}
