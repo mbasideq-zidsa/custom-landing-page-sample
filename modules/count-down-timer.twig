@@ -2,10 +2,11 @@
          data-lg-scroll-offset="130"
          data-md-scroll-offset="130"
          data-sm-scroll-offset="94"
-         style="{% if settings.color %}color: {{ settings.color }}; {% endif %}{% if settings.background_color %}background-color: {{ settings.background_color }}; {% endif %}"
          >
-  <div class="section-slider-padding-space section-count-down">
-
+  <div 
+  class="section-slider-padding-space section-count-down"
+  style="{% if settings.color %}color: {{ settings.color }}; {% endif %}{% if settings.background_color %}background-color: {{ settings.background_color }}; {% endif %}"
+  >
       <div class="sale-container">
             <h3>{{ settings.title }}</h3>
             <p>{{ settings.description }}</p>
@@ -22,10 +23,13 @@
 </section>
 
 <style>
+.section-count-down {
+  background-color: #3C0458;
+}
+
 .sale-container {
     text-align: center;
     padding: 40px;
-    background-color: #3C0458;
     color: #fff;
 }
 
