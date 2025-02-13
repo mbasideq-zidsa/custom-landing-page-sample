@@ -92,27 +92,27 @@
       {% endif %}
       <style>
         .product-headline, .title-red {
-            color: #3C0458;
+            color: var(--primary-color);
         }
         .buy-now {
-            border: #3C0458;
+            border: var(--primary-color);
         }
         .specs {
-            background: #3C0458;
+            background: var(--primary-color);
         }
         .more-specs {
-            background: #3C0458;
-            box-shadow: inset 0 0 0 2000px #3C0458;
+            background: var(--primary-color);
+            box-shadow: inset 0 0 0 2000px var(--primary-color);
         }
         .headline, .social-icons span {
-            color: #3C0458;
+            color: var(--primary-color);
         }
         .section-buy-now-form{
             background: #FBFBFB;
         }
       </style>
    </head>
-   <body class="{% if session.lang.code == 'ar' %}rtl{% else %}ltr{% endif %}">
+   <body class="purple-landing-page {% if session.lang.code == 'ar' %}rtl{% else %}ltr{% endif %}">
    {% if store.editing_mode %}
    <link href="https://fonts.googleapis.com/css2?family={% if settings.fonts_name %}{{ settings.fonts_name }}{% else %}IBM+Plex+Sans+Arabic{% endif %}:wght@300;400;500;700&display=swap" rel="stylesheet">
    {% endif %}
@@ -126,7 +126,7 @@
  		{{ home_template_modules }}
 
 
-    {% if not product.selected_product.out_of_stock %}
+    {% if false %}
     <div class="buying-buttons">
 	    <div class="sticky floating-div" id="floatBtn2">
         <div class="container z-3 border-secondary border-opacity-10 bg-light-subtle shadow-lg rounded-5 rounded-bottom-0 animate__fadeIn animate__delay-1s js-quantity-add-buttons">
