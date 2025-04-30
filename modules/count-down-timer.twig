@@ -74,50 +74,60 @@
 }
 </style>
 
-
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
 
-  
-
-    document.addEventListener("DOMContentLoaded", function(){
-
-        // Create the future date by adding the milliseconds
-        const dateValue = document.querySelector('[section-id="{{ sectionId }}"] #countdown').getAttribute("data-date");
-        const futureDate = new Date(dateValue);      
-
-      // Create a new Date object representing the duration since the Unix epoch
-      const saleEndDate = futureDate.getTime();
-
-        if(window['{{ sectionId }}' + '-countdownInterval'] ){
-          console.log('Cleared');
-          clearInterval(window['{{ sectionId }}' + '-countdownInterval']);
+        var sectionSelector = '[section-id="{{ sectionId }}"]';
+        var countdownElement = document.querySelector(sectionSelector + ' #countdown');
+        if (!countdownElement) {
+            console.error('Countdown element not found');
+            return;
         }
 
-        // Update the countdown every second
-        window['{{ sectionId }}' + '-countdownInterval'] = setInterval(() => {
-            console.log('setInterval');
-            console.log(dateValue)
-            console.log(futureDate)
+        var dateValue = countdownElement.getAttribute("data-date");
+        var futureDate = new Date(dateValue);
 
-            const now = new Date().getTime();
-            const timeLeft = saleEndDate - now;
+        if (isNaN(futureDate.getTime())) {
+            console.error('Invalid date:', dateValue);
+            return;
+        }
 
-            // Time calculations
-            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+        var saleEndDate = futureDate.getTime();
 
-            // Display the result
-            document.querySelector('[section-id="{{ sectionId }}"] #days').innerText = days.toString().padStart(2, '0');
-            document.querySelector('[section-id="{{ sectionId }}"] #hours').innerText = hours.toString().padStart(2, '0');
-            document.querySelector('[section-id="{{ sectionId }}"] #minutes').innerText = minutes.toString().padStart(2, '0');
-            document.querySelector('[section-id="{{ sectionId }}"] #seconds').innerText = seconds.toString().padStart(2, '0');
+        if (window['{{ sectionId }}' + '-countdownInterval']) {
+            console.log('Cleared previous interval');
+            clearInterval(window['{{ sectionId }}' + '-countdownInterval']);
+        }
 
-            // If the countdown is over, display a message and stop the countdown
+        window['{{ sectionId }}' + '-countdownInterval'] = setInterval(function() {
+            var now = new Date().getTime();
+            var timeLeft = saleEndDate - now;
+
+            var days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+            function formatNumber(num) {
+                return num < 10 ? '0' + num : num;
+            }
+
+            var daysElement = document.querySelector(sectionSelector + ' #days');
+            var hoursElement = document.querySelector(sectionSelector + ' #hours');
+            var minutesElement = document.querySelector(sectionSelector + ' #minutes');
+            var secondsElement = document.querySelector(sectionSelector + ' #seconds');
+
+            if (daysElement) daysElement.innerText = formatNumber(days);
+            if (hoursElement) hoursElement.innerText = formatNumber(hours);
+            if (minutesElement) minutesElement.innerText = formatNumber(minutes);
+            if (secondsElement) secondsElement.innerText = formatNumber(seconds);
+
             if (timeLeft < 0) {
-                clearInterval(window['{{ sectionId }}' + '-countdownInterval'] );
-                document.querySelector('[section-id="{{ sectionId }}"] .sale-container').innerHTML = `<h3>{{ settings.sales_end_description }}</h3>`;
+                clearInterval(window['{{ sectionId }}' + '-countdownInterval']);
+                var saleContainer = document.querySelector(sectionSelector + ' .sale-container');
+                if (saleContainer) {
+                    saleContainer.innerHTML = '<h3>{{ settings.sales_end_description }}</h3>';
+                }
             }
         }, 1000);
 
