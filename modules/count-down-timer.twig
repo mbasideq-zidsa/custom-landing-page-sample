@@ -5,12 +5,12 @@
          >
   <div 
   class="section-slider-padding-space section-count-down"
-  style="{% if settings.color %}color: {{ settings.color }}; {% endif %}{% if settings.background_color %}background-color: {{ settings.background_color }}; {% endif %}"
+  style="{% if settings.color %}color: {{ settings.color }}; {% else %} color: #fff; {% endif %}{% if settings.background_color %}background-color: {{ settings.background_color }}; {% endif %}"
   >
       <div class="sale-container">
             <h3>{{ settings.title }}</h3>
             <p>{{ settings.description }}</p>
-            <div id="countdown" data-date="{{ settings.date }}">
+            <div id="countdown" style="{% if settings.color %}color: {{ settings.color }}; {% else %} color: #fff; {% endif %}" data-date="{{ settings.date }}">
                 <div><span id="days">00</span>{{ locals.days }}</div>
                 <div><span id="hours">00</span>{{ locals.hours }}</div>
                 <div><span id="minutes">00</span>{{ locals.minutes }}</div>
@@ -30,7 +30,6 @@
 .sale-container {
     text-align: center;
     padding: 40px;
-    color: #fff;
 }
 
 .sale-container h3{
@@ -47,7 +46,6 @@
 
 #countdown div {
     background: #333;
-    color: #fff;
     padding: 10px;
     border-radius: 5px;
     min-width: 70px;
@@ -75,6 +73,24 @@
 </style>
 
 <script>
+    function normalizeDateString(dateStr) {
+        // Split into date and time
+        var parts = dateStr.trim().split(' ');
+        if (parts.length !== 2) return null;
+
+        var dateParts = parts[0].split('-');
+        var timePart = parts[1];
+
+        if (dateParts.length !== 3) return null;
+
+        // Pad year, month, and day
+        var year = dateParts[0];
+        var month = dateParts[1].padStart(2, '0');
+        var day = dateParts[2].padStart(2, '0');
+
+        // Combine into ISO 8601 format
+        return `${year}-${month}-${day}T${timePart}`;
+    }
     document.addEventListener("DOMContentLoaded", function() {
 
         var sectionSelector = '[section-id="{{ sectionId }}"]';
@@ -85,6 +101,7 @@
         }
 
         var dateValue = countdownElement.getAttribute("data-date");
+        dateValue = normalizeDateString(dateValue);
         var futureDate = new Date(dateValue);
 
         if (isNaN(futureDate.getTime())) {
