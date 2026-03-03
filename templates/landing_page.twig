@@ -179,7 +179,7 @@
    <script type="text/javascript" src="{{ asset_url ~ 'ekko-lightbox.min.js' }}"></script>
    <script type="text/javascript" src="{{ asset_url ~ 'product-details.js' }}"></script>
    <script type="text/javascript" src="{{ asset_url ~ 'toastr.min.js' }}"></script>
-   <script type="text/javascript"  src="{{ assetUrl('custom-product-script.js?v=1.0027') }}"></script>
+   <script type="text/javascript"  src="{{ assetUrl('custom-product-script.js?v=1.0033') }}"></script>
    {{ product_view_scripts|raw }}
    <script>
       var productImages = {{  product.selected_product.images | json_encode() | raw }};
@@ -187,7 +187,7 @@
       
       function addToCartAction() {
             $('.add-to-cart-progress').removeClass('d-none');
-              zid.store.cart.buyProduct({ formId: 'product-form' })
+            zid.store.cart.addProduct({ formId: 'product-form' })
               .then(function (response) {
                   if (response.status === 'success') {
                       if (response.data) {
@@ -209,12 +209,18 @@
                       window.location.href="/checkout/choose-address-and-shipping"
                       
                   } else {
-      
-                      toastr.error(response.data.message, '{{ locals.sorry }}');
+                      toastr.error(response.data.message.description, '{{ locals.sorry }}');
 
                       $('.add-to-cart-progress').addClass('d-none');
                       
                   }
+              }).catch(function (error) {
+                  var message = error.response.data
+                      ? error.response.data.message.description
+                      : '{{ locals.sorry }}';
+
+                  toastr.error(message, '{{ locals.sorry }}');
+                  $('.add-to-cart-progress').addClass('d-none');
               });
       }
       
