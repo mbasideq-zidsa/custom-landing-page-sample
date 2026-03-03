@@ -47,7 +47,8 @@
   
   function scrollToOptionsSection() {
     const optionsSection = document.querySelector(".size-box"); // Select the specific options div
-    const navbarHeight = document.querySelector(".header").offsetHeight; // Adjust for the navbar height if necessary
+    const headerElement = document.querySelector(".header");
+    const navbarHeight = headerElement ? document.querySelector(".header").offsetHeight : 0; // Adjust for the navbar height if necessary
     window.scrollTo({
       top: optionsSection.offsetTop - navbarHeight,
       behavior: "smooth",
