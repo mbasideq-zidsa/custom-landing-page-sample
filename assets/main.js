@@ -170,6 +170,181 @@ function productCartAddToCart(elm, product_id) {
 
     })
 }
+function convertArabicNumbersToEnglish(strNum) {
+    if(!strNum || strNum.trim().length <= 0)
+        return strNum;
+
+    let ar = '٠١٢٣٤٥٦٧٨٩'.split('');
+    let en = '0123456789'.split('');
+    strNum = strNum.replace(/[٠١٢٣٤٥٦٧٨٩]/g, x => en[ar.indexOf(x)]);
+    strNum = strNum.replace(/[^\d]/g, '');
+    return strNum;
+}
+
+function addProductToCart(formId) {
+    let product_id = document.querySelector('#'+formId+' #product-id').value;
+    let quantity_input = document.querySelector('#'+formId+' #product-quantity');
+    let product_quantity = quantity_input ? quantity_input.value : 1;
+    let custom_fields = [];
+
+    let inputFieldsInputs  = document.querySelectorAll("#product-custom-user-input-fields input, #product-custom-user-input-fields textarea");
+
+    let optionFieldsInputsGroups  = document.querySelectorAll(".product-custom-user-option-fields-group");
+
+    let optionFieldsDropdowns  = document.querySelectorAll("#product-custom-user-dropdown-fields select");
+
+    if(inputFieldsInputs)
+    {
+        for (let i = 0; i < inputFieldsInputs.length; i++) {
+            let id = inputFieldsInputs[i].getAttribute("id");
+            let name = inputFieldsInputs[i].getAttribute("name");
+            let type = inputFieldsInputs[i].getAttribute("data-type");
+            let typeAtt = inputFieldsInputs[i].getAttribute("data-type-att");
+            let value = inputFieldsInputs[i].value;
+
+
+            if(type === 'NUMBER'){
+                value = convertArabicNumbersToEnglish(value);
+            }
+
+            // if(type === 'FILE'){
+            //     if(inputFieldsInputs[i].files && inputFieldsInputs[i].files.length > 0) {
+            //         let fileUploadResponse = await uploadFile(defaults.baseURL+'/carts/products/input-fields/file', inputFieldsInputs[i]);
+            //         if(fileUploadResponse.status === "success")
+            //         {
+            //             value = fileUploadResponse.data.payload.path;
+            //         }else{
+            //             return fileUploadResponse;
+            //         }
+            //     }
+            // }
+            //
+            // if(type === 'IMAGE'){
+            //     if(inputFieldsInputs[i].files && inputFieldsInputs[i].files.length > 0) {
+            //         let fileUploadResponse = await uploadFile(defaults.baseURL + '/carts/products/input-fields/image', inputFieldsInputs[i]);
+            //         if (fileUploadResponse.status === "success") {
+            //             value = fileUploadResponse.data.payload.path;
+            //         } else {
+            //             return fileUploadResponse;
+            //         }
+            //     }
+            // }
+
+
+            if(typeAtt === 'TEXTAREA') {
+                value = value.replace(/\n/g, "<br />");
+            }
+
+
+            if(value && value.trim().length > 0){
+                custom_fields.push({
+                    price_settings: id,
+                    group_id: id,
+                    name:name,
+                    value:value,
+                    type:type
+                })
+            }
+        }
+    }
+
+    if(optionFieldsInputsGroups)
+    {
+        for (let i = 0; i < optionFieldsInputsGroups.length; i++) {
+            let optionFieldsInputsGroupId = optionFieldsInputsGroups[i].value
+
+            let optionFieldsInputsGroupName = optionFieldsInputsGroups[i].name
+
+            let optionFieldsDivGroup = document.querySelector('[option-id="product-custom-user-option-fields-group-'+optionFieldsInputsGroupId+'"]');
+
+
+            let optionFieldsInputs  = optionFieldsDivGroup.querySelectorAll("#product-custom-user-option-fields input[type='checkbox']");
+
+
+            for (let i = 0; i < optionFieldsInputs.length; i++) {
+
+                let id = optionFieldsInputs[i].getAttribute("id");
+                let name = optionFieldsInputs[i].getAttribute("name");
+                if(optionFieldsInputs[i].checked){
+                    custom_fields.push({
+                        price_settings:{
+                            [optionFieldsInputsGroupId]:id
+                        },
+                        group_name: optionFieldsInputsGroupName,
+                        group_id:optionFieldsInputsGroupId,
+                        name:name,
+                        value:'✔',
+                        type:'CHECKBOX'
+                    })
+                }
+
+
+            }
+        }
+    }
+
+    if(optionFieldsDropdowns){
+        for (let i = 0; i < optionFieldsDropdowns.length; i++) {
+            let optionFieldsDropdownsGroupId = optionFieldsDropdowns[i].id
+
+            let optionFieldsDropdownsGroupName = optionFieldsDropdowns[i].name
+
+            let doptionFieldsDropdownsSelectOptionId = optionFieldsDropdowns[i].options[optionFieldsDropdowns[i].selectedIndex].id;
+
+            let doptionFieldsDropdownsSelectOptionName = optionFieldsDropdowns[i].options[optionFieldsDropdowns[i].selectedIndex].getAttribute("value");
+
+            if(optionFieldsDropdowns[i].selectedIndex > 0){
+                custom_fields.push({
+                    price_settings:{
+                        [optionFieldsDropdownsGroupId]:doptionFieldsDropdownsSelectOptionId
+                    },
+                    group_name: optionFieldsDropdownsGroupName,
+                    group_id:optionFieldsDropdownsGroupId,
+                    name:doptionFieldsDropdownsSelectOptionName,
+                    value:'✔',
+                    type:'DROPDOWN'
+                })
+            }
+        }
+    }
+
+    return fetch(`/api/v1/cart/${product_id}/add`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            // If you're using Laravel and need CSRF:
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+        },
+        body: JSON.stringify({
+            quantity: product_quantity,
+            custom_fields
+        }),
+        credentials: 'include' // important if you're using cookies/session
+    })
+        .then(async (res) => {
+            if (!res.ok) {
+                throw new Error(`HTTP error! Status: ${res.status}`);
+            }
+            return res.json();
+        })
+        .then(response => {
+            if (
+                response.data &&
+                response.data.message &&
+                response.data.code === "ERROR_CART_IS_RESERVED" &&
+                !window.customer_cart_is_reserved
+            ) {
+                window.location.reload();
+            }
+
+            return response;
+        })
+        .catch(error => {
+            console.error('Add to cart failed:', error);
+            throw error;
+        });
+}
 
 function addToCart(product_id, quantity, onCompleted) {
     zid.store.cart.addProduct({productId: product_id, quantity: quantity}).then(function (response) {

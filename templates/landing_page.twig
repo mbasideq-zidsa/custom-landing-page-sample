@@ -175,7 +175,7 @@
    <script src="{{ asset_url ~ 'bootstrap.min.js' }}"></script>
    <script src="{{ asset_url ~ 'slide-menu.ie.js?v=1.06' }}"></script>
    <script src="{{ asset_url ~ 'slick.min.js' }}"></script>
-   <script type="text/javascript" src="{{ asset_url ~ 'main.js?v=1.119' }}"></script>
+   <script type="text/javascript" src="{{ asset_url ~ 'main.js?v=1.121' }}"></script>
    <script type="text/javascript" src="{{ asset_url ~ 'ekko-lightbox.min.js' }}"></script>
    <script type="text/javascript" src="{{ asset_url ~ 'product-details.js' }}"></script>
    <script type="text/javascript" src="{{ asset_url ~ 'toastr.min.js' }}"></script>
@@ -184,10 +184,10 @@
    <script>
       var productImages = {{  product.selected_product.images | json_encode() | raw }};
       
-      
+
       function addToCartAction() {
             $('.add-to-cart-progress').removeClass('d-none');
-            zid.store.cart.addProduct({ formId: 'product-form' })
+          addProductToCart('product-form')
               .then(function (response) {
                   if (response.status === 'success') {
                       if (response.data) {
