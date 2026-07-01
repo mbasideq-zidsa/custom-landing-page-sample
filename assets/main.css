@@ -430,7 +430,7 @@ button.more-button , a.more-button {
 
 .search-header{
     padding: 15px 0px;
-    background-color: var( --secondary-color);
+    /*background-color: var( --secondary-color);*/
 }
 
 .search-header .image-logo {
