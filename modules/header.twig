@@ -2,8 +2,15 @@
     <div style="z-index: 3">
         <div class="search-header">
             <div class="container ">
-                <div class="d-flex justify-content-center align-items-center search-header-bar">
-                    <div class="d-flex align-items-center bd-highlight header-logo">
+                {% if session.lang.code == 'en' %}
+                    {% set change_to_lang = 'ar' %}
+                    {% set change_to_lang_name = 'Ar' %}
+                {% else %}
+                    {% set change_to_lang = 'en' %}
+                    {% set change_to_lang_name = 'En' %}
+                {% endif %}
+                <div class="d-flex align-items-center search-header-bar">
+                    <div class="d-flex justify-content-center align-items-center bd-highlight header-logo">
                         <a href="/" style="width: auto; height: 100%; display: block">
                             {% if header_settings.header_logo %}
                                 {% set logoUrl = header_settings.header_logo %}
@@ -23,6 +30,15 @@
                             {% endif %}
                         </a>
                     </div>
+
+                    <div class="language-currency" onclick="zidOpenRegionSettingDialog('{{ change_to_lang }}')">
+                        <div class="language-button-area d-flex justify-content-center">
+                            <button style="color: var(--header-text-color-primary-bg-color, var(--text-color-primary-bg))" type="submit" class='c-btn language-btn d-flex justify-content-between align-items-center'>
+                                <span class="px-2">{{ change_to_lang_name }}</span>&nbsp;
+                                <span class="icon-language_white"></span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -30,6 +46,13 @@
 
 </header>
 
+<script>
+    function zidOpenRegionSettingDialog(lang) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('lang', lang);
+        window.location.href = url.toString();
+    }
+</script>
 
 {% schema %}
     {

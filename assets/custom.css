@@ -8,6 +8,10 @@
 
 .search-header-bar {
     height: 100px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .search-header-bar > * {

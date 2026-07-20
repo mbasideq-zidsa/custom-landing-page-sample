@@ -217,10 +217,14 @@ button.more-button , a.more-button {
 
 .language-currency {
     max-height: 30px;
-    background-color: transparent !important;
+    background-color: var(--primary-color, var(--text-color-primary-bg)) !important;
     border: 1px solid var(--header-text-color-primary-bg, var(--text-color-primary-bg));
     border-radius: 5px;
     overflow: hidden;
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .language-currency-menu {
@@ -243,7 +247,7 @@ button.more-button , a.more-button {
 }
 
 .language-btn, .currency-btn {
-    color: var(--header-text-color-primary-bg, var(--text-color-primary-bg));
+    color: var(--primary-color, var(--text-color-primary-bg));
 }
 
 .language-btn-menu, .currency-btn-menu {
